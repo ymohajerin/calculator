@@ -26,7 +26,8 @@ let firstNum;
 let secondNum;
 let curOperator;
 let num1Turn = true;
-let operatorClicked = false /**  checks for operator click to delete display after and add numbers
+let notFirstOperator = false;
+let operatorClicked = false; /**  checks for operator click to delete display after and add numbers
  */
 let display = document.querySelector(".ongoing")
 for (let button of document.querySelectorAll(".number")){
@@ -34,8 +35,7 @@ for (let button of document.querySelectorAll(".number")){
         
         display.textContent = (operatorClicked)? button.textContent : display.textContent + button.textContent
         if (operatorClicked){
-            operatorClicked = false
-        };
+            operatorClicked = false};
 
         if (num1Turn === true){
             firstNum = parseFloat(display.textContent)
@@ -48,16 +48,36 @@ for (let button of document.querySelectorAll(".number")){
 let clearButton = document.getElementById("all-clear");
 clearButton.addEventListener("click", function() {
     display.textContent = ""
-    firstNum = 0
-    secondNum = 0
+    firstNum = undefined
+    secondNum = undefined
     result.textContent = ""
+    num1Turn = true;
+    notFirstOperator = false;
+    operatorClicked = false;
+
 })
 
 for (let operator of document.querySelectorAll(".operator")){
     operator.addEventListener("click", function(){
+        if (firstNum == NaN){
+            notFirstOperator = false;
+            num1Turn = true
+            return
+        }
+        if (notFirstOperator){
+            result.textContent = operate(firstNum, secondNum, curOperator)
+            firstNum = operate(firstNum, secondNum, curOperator)
+            secondNum = undefined
+            num1Turn = false
+            curOperator = operator.id
+            operatorClicked = true;
+        }
+        else{
         curOperator = operator.id
         operatorClicked = true;
-        num1Turn = !(num1Turn)
+        num1Turn = false
+        notFirstOperator = true}
+        
 
     })
 } 
