@@ -133,4 +133,33 @@ equal.addEventListener("click", function(){
     result.textContent = operate(firstNum, secondNum, curOperator)
     firstNum = operate(firstNum, secondNum, curOperator)
     display.textContent = ""
+    secondNum = undefined
+    num1Turn = false
 })
+let percentage = document.getElementById("%")
+percentage.addEventListener("click", function () {
+    if (operatorClicked){
+        return}
+        if (typeof firstNum === "undefined") {
+            return;
+        }
+
+        if (num1Turn) {
+            firstNum /= 100;
+            display.textContent = firstNum.toString();
+            return;
+        }
+    
+        switch (curOperator) {
+            case "+":
+            case "-":
+                secondNum = firstNum * (secondNum / 100);
+                break;
+            case "*":
+            case "/":
+                secondNum /= 100;
+                break;
+        }
+    
+        display.textContent = secondNum.toString();
+    });
