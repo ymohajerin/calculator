@@ -8,9 +8,30 @@ function multiply(number1, number2){
     return number1 * number2
 };
 function divide(number1, number2){
+    if (number2 === 0) {
+        alert("Cannot divide by zero!")
+        display.textContent = ""
+        firstNum = undefined
+        secondNum = undefined
+        num1Turn = true;
+        notFirstOperator = false;
+        operatorClicked = false;;
+        return "Error";
+    }
     return number1 / number2
 };
 function operate (number1, number2, operators){
+    if( isNaN(number1) && isNaN(number2)){
+        alert("No number entered! press AC to continue")
+        return "Error "
+    }
+    else if (isNaN(number1) && !isNaN(number2)){
+        return number2
+    }
+    else if(isNaN(number2) && !isNaN(number1)){
+        return number1
+    }
+    else{
     switch (operators) {
         case "+":
           return add(number1, number2)
@@ -20,7 +41,7 @@ function operate (number1, number2, operators){
            return multiply(number1, number2)
         case "/":
           return divide(number1, number2)
-        }
+        }}
 }
 let firstNum;
 let secondNum;
@@ -59,7 +80,7 @@ clearButton.addEventListener("click", function() {
 
 for (let operator of document.querySelectorAll(".operator")){
     operator.addEventListener("click", function(){
-        if (firstNum == NaN){
+        if (isNaN(firstNum)){
             notFirstOperator = false;
             num1Turn = true
             return
@@ -83,7 +104,33 @@ for (let operator of document.querySelectorAll(".operator")){
 } 
 let equal = document.getElementById("equal")
 let result = document.querySelector(".result")
+const backspaceButton = document.getElementById("backspace");
+
+backspaceButton.addEventListener("click", function() {
+    if (operatorClicked) {
+        display.textContent = firstNum.toString();
+        operatorClicked = false; 
+        notFirstOperator = false;  
+    }
+
+    if (display.textContent.length > 0) {
+        display.textContent = display.textContent.slice(0, -1);
+    }
+    if (display.textContent === "") {
+        display.textContent = "0";
+    }
+
+    let currentNumber = display.textContent.includes('.') ? parseFloat(display.textContent) : parseInt(display.textContent);
+
+    if (num1Turn) {
+        firstNum = currentNumber;
+    } else {
+        secondNum = currentNumber;
+    }
+});
+
 equal.addEventListener("click", function(){ 
     result.textContent = operate(firstNum, secondNum, curOperator)
+    firstNum = operate(firstNum, secondNum, curOperator)
     display.textContent = ""
 })
